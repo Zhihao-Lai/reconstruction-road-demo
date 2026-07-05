@@ -35,8 +35,8 @@
         "smooth": {
           "label": "流畅",
           "cloud": "pointclouds/fullres_belleview_residential_14_8m_lod_1500k.pcd1",
-          "displayPoints": 1500000,
-          "cloudMb": 14.3
+          "displayPoints": 500000,
+          "cloudMb": 4.8
         },
         "full": {
           "label": "高清",
@@ -82,8 +82,8 @@
         "smooth": {
           "label": "流畅",
           "cloud": "pointclouds/fullres_belleview_parking_14_8m_lod_1500k.pcd1",
-          "displayPoints": 1500000,
-          "cloudMb": 14.3
+          "displayPoints": 500000,
+          "cloudMb": 4.8
         },
         "full": {
           "label": "高清",
@@ -163,8 +163,8 @@
         "smooth": {
           "label": "流畅",
           "cloud": "pointclouds/fullres_sheffield_cross_48_10m_lod_1500k.pcd1",
-          "displayPoints": 1500000,
-          "cloudMb": 14.3
+          "displayPoints": 500000,
+          "cloudMb": 4.8
         },
         "detail": {
           "label": "细节",
@@ -250,8 +250,8 @@
         "smooth": {
           "label": "流畅",
           "cloud": "pointclouds/fullres_helenenschacht_48_10m_lod_1500k.pcd1",
-          "displayPoints": 1500000,
-          "cloudMb": 14.3
+          "displayPoints": 500000,
+          "cloudMb": 4.8
         },
         "detail": {
           "label": "细节",
@@ -321,8 +321,8 @@
         "smooth": {
           "label": "流畅",
           "cloud": "pointclouds/suburban_road_block_01_32img_lod_1500k.pcd1",
-          "displayPoints": 1500000,
-          "cloudMb": 14.3
+          "displayPoints": 500000,
+          "cloudMb": 4.8
         },
         "full": {
           "label": "高清",
@@ -386,8 +386,8 @@
         "smooth": {
           "label": "流畅",
           "cloud": "pointclouds/suburban_road_block_02_32img_lod_1500k.pcd1",
-          "displayPoints": 1500000,
-          "cloudMb": 14.3
+          "displayPoints": 500000,
+          "cloudMb": 4.8
         },
         "full": {
           "label": "高清",
@@ -451,8 +451,8 @@
         "smooth": {
           "label": "流畅",
           "cloud": "pointclouds/suburban_road_block_03_32img_lod_1500k.pcd1",
-          "displayPoints": 1500000,
-          "cloudMb": 14.3
+          "displayPoints": 500000,
+          "cloudMb": 4.8
         },
         "full": {
           "label": "高清",
@@ -516,8 +516,8 @@
         "smooth": {
           "label": "流畅",
           "cloud": "pointclouds/suburban_road_block_04_32img_lod_1500k.pcd1",
-          "displayPoints": 1500000,
-          "cloudMb": 14.3
+          "displayPoints": 500000,
+          "cloudMb": 4.8
         },
         "full": {
           "label": "高清",
@@ -581,8 +581,8 @@
         "smooth": {
           "label": "流畅",
           "cloud": "pointclouds/suburban_road_block_05_32img_lod_1500k.pcd1",
-          "displayPoints": 1500000,
-          "cloudMb": 14.3
+          "displayPoints": 500000,
+          "cloudMb": 4.8
         },
         "full": {
           "label": "高清",
