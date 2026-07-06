@@ -7,6 +7,8 @@ const inputStrip = document.getElementById("inputStrip");
 const sceneGrid = document.getElementById("sceneGrid");
 const viewButtons = Array.from(document.querySelectorAll("#viewControls [data-view]"));
 const qualityButtons = Array.from(document.querySelectorAll("#qualityControls [data-quality]"));
+const localCloudButton = document.getElementById("localCloudButton");
+const localCloudInput = document.getElementById("localCloudInput");
 
 let gl;
 let program;
@@ -321,6 +323,34 @@ async function loadCloud(scene, quality = currentQuality) {
   requestRender();
 }
 
+async function loadLocalCloud(file) {
+  if (!file) {
+    return;
+  }
+  const loadToken = activeLoadToken + 1;
+  activeLoadToken = loadToken;
+  const scene = currentScene || {};
+  pointCount = 0;
+  titleEl.textContent = file.name.replace(/\.[^.]+$/, "") || "本地点云";
+  detailTitle.textContent = "本地点云";
+  statusEl.textContent = "本地点云加载中";
+  detailMeta.innerHTML = "<span>本地文件</span><span>不会上传</span>";
+  cardByStem.forEach((card) => card.classList.remove("active"));
+
+  const cloud = parsePointCloud(await file.arrayBuffer());
+  if (loadToken !== activeLoadToken) {
+    return;
+  }
+  const positions = centerPositions(orientPositions(cloud.positions, scene));
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, cloud.colors, gl.STATIC_DRAW);
+  pointCount = cloud.count;
+  statusEl.textContent = `本地点云 ${formatCount(cloud.count)}点`;
+  requestRender();
+}
+
 function renderGrid(items) {
   sceneGrid.innerHTML = "";
   cardByStem = new Map();
@@ -448,6 +478,16 @@ qualityButtons.forEach((button) => {
     }
     loadCloud(currentScene, button.dataset.quality).catch(showError);
   });
+});
+
+localCloudButton.addEventListener("click", () => {
+  localCloudInput.click();
+});
+
+localCloudInput.addEventListener("change", () => {
+  const file = localCloudInput.files && localCloudInput.files[0];
+  loadLocalCloud(file).catch(showError);
+  localCloudInput.value = "";
 });
 
 async function boot() {

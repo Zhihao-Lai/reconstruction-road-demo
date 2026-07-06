@@ -181,6 +181,14 @@
       opacity: .45;
       cursor: default;
     }
+    .local-file-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
     .detail-panel {
       grid-area: detail;
       padding: 16px;
@@ -479,6 +487,8 @@
           <button type="button" data-quality="full">高清</button>
         </div>
         <div class="viewer-controls" id="viewControls">
+          <input class="local-file-input" id="localCloudInput" type="file" accept=".pcd1">
+          <button type="button" id="localCloudButton">加载本地点云</button>
           <button type="button" data-view="turn-left">左转90°</button>
           <button type="button" data-view="turn-back">水平180°</button>
           <button type="button" data-view="turn-right">右转90°</button>
@@ -501,6 +511,6 @@
     <section class="gallery" id="sceneGrid"></section>
   </main>
   <script src="viewerZoom.js?v=20260705-unlimitedzoom"></script>
-  <script src="app.js?v=20260705-landscape-layout"></script>
+  <script src="app.js?v=20260706-local-cloud"></script>
 </body>
 </html>
