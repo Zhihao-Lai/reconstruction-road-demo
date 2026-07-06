@@ -30,7 +30,7 @@ let currentQuality = "smooth";
 let activeLoadToken = 0;
 let renderRequested = false;
 
-window.__viewerInteractionState = () => ({ yaw, pitch, zoom, dragging });
+window.__viewerInteractionState = () => ({ yaw, pitch, zoom, panX, panY, dragging, dragMode });
 
 const VIEW_PRESETS = {
   angle: { yaw: 0, pitch: -1.42, zoom: 0.9 },
@@ -417,7 +417,8 @@ function onPointerMove(event) {
   if (!dragging || !lastPointer) {
     return;
   }
-  if (event.pointerType === "mouse" && (event.buttons & 1) !== 1) {
+  const requiredMouseButton = dragMode === "pan" ? 2 : 1;
+  if (event.pointerType === "mouse" && (event.buttons & requiredMouseButton) !== requiredMouseButton) {
     dragging = false;
     dragMode = "rotate";
     lastPointer = null;
@@ -425,8 +426,14 @@ function onPointerMove(event) {
   }
   const dx = event.clientX - lastPointer.x;
   const dy = event.clientY - lastPointer.y;
-  yaw += dx * 0.008;
-  pitch = Math.max(-1.52, Math.min(1.52, pitch + dy * 0.006));
+  if (dragMode === "pan") {
+    const rect = canvas.getBoundingClientRect();
+    panX += (dx / rect.width) * 2;
+    panY -= (dy / rect.height) * 2;
+  } else {
+    yaw += dx * 0.008;
+    pitch = Math.max(-1.52, Math.min(1.52, pitch + dy * 0.006));
+  }
   lastPointer = { x: event.clientX, y: event.clientY };
   requestRender();
 }
@@ -435,12 +442,17 @@ canvas.addEventListener("contextmenu", (event) => {
   event.preventDefault();
 });
 canvas.addEventListener("pointerdown", (event) => {
-  if (event.pointerType === "mouse" && event.button !== 0) {
-    return;
+  let mode = "rotate";
+  if (event.pointerType === "mouse") {
+    if (event.button === 2) {
+      mode = "pan";
+    } else if (event.button !== 0) {
+      return;
+    }
   }
   event.preventDefault();
   dragging = true;
-  dragMode = "rotate";
+  dragMode = mode;
   setActiveView(null);
   lastPointer = { x: event.clientX, y: event.clientY };
   canvas.setPointerCapture(event.pointerId);
