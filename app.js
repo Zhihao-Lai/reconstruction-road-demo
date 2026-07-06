@@ -278,6 +278,39 @@ function centerPositions(positions) {
   return positions;
 }
 
+async function fetchCloudBuffer(cloudSpec, loadToken) {
+  if (Array.isArray(cloudSpec.chunks) && cloudSpec.chunks.length > 0) {
+    const parts = [];
+    let totalBytes = 0;
+    for (let index = 0; index < cloudSpec.chunks.length; index += 1) {
+      statusEl.textContent = `${cloudSpec.label}加载中 ${index + 1}/${cloudSpec.chunks.length}`;
+      const response = await fetch(cloudSpec.chunks[index], { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error(`Failed to load ${cloudSpec.chunks[index]}`);
+      }
+      const part = new Uint8Array(await response.arrayBuffer());
+      if (loadToken !== activeLoadToken) {
+        return null;
+      }
+      parts.push(part);
+      totalBytes += part.byteLength;
+    }
+    const combined = new Uint8Array(totalBytes);
+    let offset = 0;
+    for (const part of parts) {
+      combined.set(part, offset);
+      offset += part.byteLength;
+    }
+    return combined.buffer;
+  }
+
+  const response = await fetch(cloudSpec.cloud, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`Failed to load ${cloudSpec.cloud}`);
+  }
+  return response.arrayBuffer();
+}
+
 async function loadCloud(scene, quality = currentQuality) {
   const loadToken = activeLoadToken + 1;
   activeLoadToken = loadToken;
@@ -292,7 +325,7 @@ async function loadCloud(scene, quality = currentQuality) {
   inputStrip.innerHTML = "";
   scene.inputs.forEach((src, index) => {
     const figure = document.createElement("figure");
-    figure.innerHTML = `<img src="${src}" alt="${scene.title}视角${index + 1}">`;
+    figure.innerHTML = `<img src="${src}" alt="${scene.title}视角${index + 1}" loading="lazy" decoding="async">`;
     inputStrip.appendChild(figure);
   });
   detailMeta.innerHTML = `
@@ -305,11 +338,11 @@ async function loadCloud(scene, quality = currentQuality) {
     card.classList.toggle("active", stem === scene.stem);
   });
 
-  const response = await fetch(cloudSpec.cloud, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`Failed to load ${cloudSpec.cloud}`);
+  const buffer = await fetchCloudBuffer(cloudSpec, loadToken);
+  if (!buffer) {
+    return;
   }
-  const cloud = parsePointCloud(await response.arrayBuffer());
+  const cloud = parsePointCloud(buffer);
   if (loadToken !== activeLoadToken) {
     return;
   }

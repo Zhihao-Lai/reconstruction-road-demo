@@ -16,7 +16,14 @@ for (const scene of items) {
     }
   }
   for (const lod of Object.values(scene.lods || {})) {
-    if (lod.cloud && !fs.existsSync(path.join(root, lod.cloud))) {
+    const chunkList = Array.isArray(lod.chunks) ? lod.chunks : [];
+    if (chunkList.length > 0) {
+      for (const rel of chunkList) {
+        if (!fs.existsSync(path.join(root, rel))) {
+          missing.push(rel);
+        }
+      }
+    } else if (lod.cloud && !fs.existsSync(path.join(root, lod.cloud))) {
       missing.push(lod.cloud);
     }
   }
